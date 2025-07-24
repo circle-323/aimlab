@@ -1,4 +1,3 @@
-
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -52,13 +51,11 @@ h1 {
   z-index: 10;
   pointer-events: none;
 }
-
 #crosshair::before, #crosshair::after {
   content: "";
   position: absolute;
   background: #00ffcc;
 }
-
 #crosshair::before {
   left: 50%;
   top: 0;
@@ -66,7 +63,6 @@ h1 {
   height: 100%;
   transform: translateX(-50%);
 }
-
 #crosshair::after {
   top: 50%;
   left: 0;
@@ -74,21 +70,18 @@ h1 {
   width: 100%;
   transform: translateY(-50%);
 }
-
 #stats {
   margin-top: 15px;
   font-size: 18px;
   text-align: center;
   display: none;
 }
-
 #endMessage {
   font-size: 24px;
   margin-top: 20px;
   color: #00ffcc;
   text-align: center;
 }
-
 #restartBtn {
   margin-top: 20px;
   padding: 10px 20px;
