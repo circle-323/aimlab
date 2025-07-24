@@ -8,19 +8,16 @@ body {
   align-items: center;
   overflow: hidden;
 }
-
 h1 {
   margin-top: 20px;
   font-size: 32px;
   color: #00ffc6;
   text-shadow: 0 0 10px #00ffc6;
 }
-
 #menu {
   margin-top: 20px;
   text-align: center;
 }
-
 #gameArea {
   position: relative;
   width: 800px;
@@ -29,11 +26,9 @@ h1 {
   margin-top: 20px;
   border: 3px solid #00ffc6;
   box-shadow: 0 0 20px #00ffc6;
-  display: none;
   overflow: hidden;
   cursor: none;
 }
-
 .target {
   position: absolute;
   width: 50px;
@@ -43,7 +38,6 @@ h1 {
   box-shadow: 0 0 10px #f00000;
   z-index: 1;
 }
-
 #crosshair {
   position: absolute;
   width: 20px;
@@ -74,7 +68,6 @@ h1 {
   margin-top: 15px;
   font-size: 18px;
   text-align: center;
-  display: none;
 }
 #endMessage {
   font-size: 24px;
@@ -91,5 +84,4 @@ h1 {
   border-radius: 5px;
   color: #000;
   cursor: pointer;
-  display: none;
 }
