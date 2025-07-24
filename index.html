@@ -18,12 +18,12 @@
     </label>
   </div>
 
-  <div id="gameArea">
+  <div id="gameArea" style="display:none;">
     <div id="crosshair"></div>
     <div id="target" class="target"></div>
   </div>
 
-  <div id="stats">
+  <div id="stats" style="display:none;">
     <span id="modeLabel">-</span> |
     <span id="flickStats">
       命中：<span id="hit">0</span> |
@@ -39,7 +39,7 @@
   </div>
 
   <div id="endMessage"></div>
-  <button id="restartBtn" onclick="location.reload()">重新開始</button>
+  <button id="restartBtn" style="display:none;" onclick="location.reload()">重新開始</button>
 
   <audio id="hitSound" src="hit.mp3" preload="auto"></audio>
   <audio id="countdownSound" src="countdown.mp3" preload="auto"></audio>
