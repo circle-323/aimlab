@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>FPS 訓練模擬器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>FPS 訓練模擬器</h1>
+
+  <div id="menu">
+    <p>選擇訓練模式：</p>
+    <button onclick="startMode('flick')">Flick 模式</button>
+    <button onclick="startMode('tracking')">Tracking 模式</button>
+    <label>
+      靈敏度：
+      <input type="range" id="sensitivitySlider" min="0.5" max="2" step="0.1" value="1">
+    </label>
+  </div>
+
+  <div id="gameArea">
+    <div id="crosshair"></div>
+    <div id="target" class="target"></div>
+  </div>
+
+  <div id="stats">
+    <span id="modeLabel">-</span> |
+    <span id="flickStats">
+      命中：<span id="hit">0</span> |
+      射擊：<span id="shots">0</span> |
+      命中率：<span id="accuracy">0</span>%
+    </span>
+    <span id="trackingStats" style="display:none;">
+      追蹤命中（秒）：<span id="hit">0</span> /
+      經過（秒）：<span id="shots">0</span> |
+      命中率：<span id="accuracy">0</span>%
+    </span>
+    <span> | 時間：<span id="time">60</span> 秒</span>
+  </div>
+
+  <div id="endMessage"></div>
+  <button id="restartBtn" onclick="location.reload()">重新開始</button>
+
+  <audio id="hitSound" src="hit.mp3" preload="auto"></audio>
+  <audio id="countdownSound" src="countdown.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>

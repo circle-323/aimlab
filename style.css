@@ -1,0 +1,102 @@
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+h1 {
+  margin-top: 20px;
+  font-size: 32px;
+  color: #00ffc6;
+  text-shadow: 0 0 10px #00ffc6;
+}
+
+#menu {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#gameArea {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  background: #1e1e1e;
+  margin-top: 20px;
+  border: 3px solid #00ffc6;
+  box-shadow: 0 0 20px #00ffc6;
+  display: none;
+  overflow: hidden;
+  cursor: none;
+}
+
+.target {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #ff4e50, #f00000);
+  box-shadow: 0 0 10px #f00000;
+  z-index: 1;
+}
+
+#crosshair {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#crosshair::before, #crosshair::after {
+  content: "";
+  position: absolute;
+  background: #00ffcc;
+}
+
+#crosshair::before {
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+#crosshair::after {
+  top: 50%;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+#stats {
+  margin-top: 15px;
+  font-size: 18px;
+  text-align: center;
+  display: none;
+}
+
+#endMessage {
+  font-size: 24px;
+  margin-top: 20px;
+  color: #00ffcc;
+  text-align: center;
+}
+
+#restartBtn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #00ffc6;
+  border: none;
+  border-radius: 5px;
+  color: #000;
+  cursor: pointer;
+  display: none;
+}
