@@ -10,8 +10,6 @@ const restartBtn = document.getElementById('restartBtn');
 const sensitivitySlider = document.getElementById('sensitivitySlider');
 const modeLabel = document.getElementById('modeLabel');
 const stats = document.getElementById('stats');
-const hitSound = document.getElementById('hitSound');
-const countdownSound = document.getElementById('countdownSound');
 
 let mode = '';
 let sensitivity = 1;
@@ -25,16 +23,19 @@ let timer;
 let trackingHits = 0;
 let trackingTotal = 0;
 let trackingLoop;
+let trackingInterval;
+let isCountingDown = false;
 
-// 倒數功能
+// ======= 倒數開始 =======
 function showCountdownAndStart(selectedMode) {
   let countdown = 3;
+  isCountingDown = true;
   endMessage.innerHTML = `<div style="font-size:50px;">${countdown}</div>`;
   endMessage.style.display = 'block';
   stats.style.display = 'none';
   gameArea.style.display = 'block';
-  crosshair.style.display = 'block';
-  target.style.display = 'block';
+  crosshair.style.display = 'none'; // 隱藏準星
+  target.style.display = 'none';    // 隱藏球
 
   let cd = setInterval(() => {
     countdown--;
@@ -45,16 +46,18 @@ function showCountdownAndStart(selectedMode) {
     } else {
       clearInterval(cd);
       endMessage.style.display = 'none';
-      stats.style.display = 'block';
+      isCountingDown = false;
       startRealGame(selectedMode);
     }
   }, 1000);
 }
 
-// 啟動模式（先倒數）
+// ======= 啟動模式 =======
 function startMode(selectedMode) {
   showCountdownAndStart(selectedMode);
 }
+
+// ======= 實際遊戲開始 =======
 function startRealGame(selectedMode) {
   mode = selectedMode;
   modeLabel.textContent = mode.toUpperCase();
@@ -69,8 +72,10 @@ function startRealGame(selectedMode) {
   document.getElementById('menu').style.display = 'none';
   gameArea.style.display = 'block';
   stats.style.display = 'block';
-  crosshair.style.display = 'block';
-  target.style.display = 'block';
+  crosshair.style.display = 'block';  // 開始才顯示準星
+  target.style.display = 'block';     // 開始才顯示球
+  endMessage.style.display = 'none';
+  restartBtn.style.display = 'none';
   gameRunning = true;
 
   const area = gameArea.getBoundingClientRect();
@@ -92,7 +97,6 @@ function startRealGame(selectedMode) {
       endGame();
       return;
     }
-    if (timeLeft <= 5) countdownSound.play();
     timeLeft--;
     timeDisplay.textContent = timeLeft;
   }, 1000);
@@ -105,7 +109,7 @@ sensitivitySlider.addEventListener('input', (e) => {
 });
 
 document.addEventListener('pointerlockchange', () => {
-  if (document.pointerLockElement === gameArea) {
+  if (document.pointerLockElement === gameArea && !isCountingDown) {
     document.addEventListener('mousemove', onMouseMove, false);
   } else {
     document.removeEventListener('mousemove', onMouseMove, false);
@@ -140,7 +144,6 @@ document.addEventListener('click', () => {
 
   if (isHit) {
     hits++;
-    hitSound.play();
     moveTarget();
   }
 
@@ -179,7 +182,8 @@ function trackingAnimationLoop() {
 function startTrackingMovement() {
   let posX = 100;
   let direction = 1;
-  setInterval(() => {
+  if (trackingInterval) clearInterval(trackingInterval);
+  trackingInterval = setInterval(() => {
     if (!gameRunning || mode !== 'tracking') return;
     const areaWidth = gameArea.clientWidth;
     posX += 3 * direction;
@@ -215,7 +219,7 @@ function updateStats() {
   }
 }
 
-// ----- 歷史成績紀錄 -----
+// ======= 歷史成績紀錄 =======
 function saveHistory(record) {
   let all = JSON.parse(localStorage.getItem('trainerHistory')) || [];
   all.push(record);
@@ -224,12 +228,11 @@ function saveHistory(record) {
 }
 
 function showHistory() {
-  const endMessage = document.getElementById('endMessage');
   let all = JSON.parse(localStorage.getItem('trainerHistory')) || [];
   if (!all.length) return;
   let last5 = all.slice(-5).reverse();
   let html = `<hr><div style='text-align:left;'><b>最近訓練紀錄：</b>
-    <button onclick=\"clearHistory()\" style='float:right;font-size:14px;padding:2px 8px;margin-bottom:4px;'>清空紀錄</button>
+    <button onclick="clearHistory()" style='float:right;font-size:14px;padding:2px 8px;margin-bottom:4px;'>清空紀錄</button>
     <ul style='font-size:17px;padding-left:18px'>`;
   last5.forEach(e => {
     let modeStr = e.mode === 'flick' ? 'Flick' : 'Tracking';
@@ -247,12 +250,14 @@ function clearHistory() {
   document.getElementById('endMessage').innerHTML += "<br><span style='color:#fa7'>已清空紀錄，重新整理生效</span>";
 }
 
-// ----- 結束畫面 -----
+// ======= 結束畫面 =======
 function endGame() {
   gameRunning = false;
   clearInterval(timer);
   if (trackingLoop) cancelAnimationFrame(trackingLoop);
+  if (trackingInterval) clearInterval(trackingInterval);
   target.style.display = 'none';
+  crosshair.style.display = 'none';
   let now = new Date();
   let dateStr = now.toLocaleString('zh-TW', { hour12: false });
   let record = { mode, date: dateStr };
@@ -264,7 +269,7 @@ function endGame() {
     endMessage.innerHTML = `
     <div style="font-size:36px;color:#00ffcc;margin-bottom:10px;">🎮 遊戲結束！</div>
     <div style="font-size:26px;">Flick 模式<br>命中率：${record.accuracy}%<br>命中次數：${hits} / 射擊次數：${shots}</div>
-    <button onclick="location.reload()" style="margin-top:20px;font-size:20px;padding:8px 28px;background:#00ffc6;color:#111;border:none;border-radius:8px;">再來一次</button>
+    <button id="restartBtnInMsg" style="margin-top:20px;font-size:20px;padding:8px 28px;background:#00ffc6;color:#111;border:none;border-radius:8px;">再來一次</button>
     `;
   } else if (mode === 'tracking') {
     record.accuracy = trackingTotal > 0 ? Math.round((trackingHits / trackingTotal) * 100) : 0;
@@ -272,7 +277,7 @@ function endGame() {
     endMessage.innerHTML = `
     <div style="font-size:36px;color:#00ffcc;margin-bottom:10px;">🎮 遊戲結束！</div>
     <div style="font-size:26px;">Tracking 模式<br>平均命中率：${record.accuracy}%<br>追蹤命中時間：${record.trackedSeconds} 秒</div>
-    <button onclick="location.reload()" style="margin-top:20px;font-size:20px;padding:8px 28px;background:#00ffc6;color:#111;border:none;border-radius:8px;">再來一次</button>
+    <button id="restartBtnInMsg" style="margin-top:20px;font-size:20px;padding:8px 28px;background:#00ffc6;color:#111;border:none;border-radius:8px;">再來一次</button>
     `;
   }
 
@@ -280,4 +285,10 @@ function endGame() {
   restartBtn.style.display = 'none';
   saveHistory(record);
   showHistory();
+
+  // 再來一次按鈕綁事件
+  setTimeout(() => {
+    let btn = document.getElementById('restartBtnInMsg');
+    if (btn) btn.onclick = () => location.reload();
+  }, 100);
 }
